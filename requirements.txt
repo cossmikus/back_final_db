@@ -1,4 +1,3 @@
---upgrade pip
 Flask
 python-dotenv
 psycopg2-binary
