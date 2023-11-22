@@ -69,9 +69,10 @@ def get_all_users():
 
 @app.route("/api/user/<int:user_id>", methods=["GET"])
 def get_user(user_id):
-    user_data = User.query.get(user_id)
-    if user_data:
-        return jsonify(user_data.__dict__)
+    user = User.query.get(user_id)
+    if user:
+        user_data = {column.key: getattr(user, column.key) for column in class_mapper(User).mapped_table.c}
+        return jsonify(user_data)
     else:
         return jsonify({"message": "User not found"}), 404
 
@@ -93,7 +94,18 @@ def update_user(user_id):
 
     db.session.commit()
 
-    return jsonify({"message": f"User with ID {user_id} updated successfully"})
+    updated_user_data = {
+        "user_id": user.user_id,
+        "email": user.email,
+        "given_name": user.given_name,
+        "surname": user.surname,
+        "city": user.city,
+        "phone_number": user.phone_number,
+        "profile_description": user.profile_description,
+        "the_password": user.the_password,
+    }
+
+    return jsonify({"message": f"User with ID {user_id} updated successfully", "user": updated_user_data})
 
 
 @app.route("/api/user/<int:user_id>", methods=["DELETE"])
@@ -105,7 +117,7 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
 
-    return jsonify({"message": "User deleted successfully"})
+    return jsonify({"message": "User deleted successfully", "user_id": user_id})
 
 
 if __name__ == "__main__":
