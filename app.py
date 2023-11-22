@@ -13,7 +13,7 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
-    __tablename__ = 'THE_USER'
+    __tablename__ = 'the_user'
     user_id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
     given_name = db.Column(db.String)
