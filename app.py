@@ -62,6 +62,7 @@ def get_all_users():
             else:
                 return jsonify({"message": "No users found"}), 404
 
+
 @app.route("/api/user/<int:user_id>", methods=["GET"])
 def get_user(user_id):
     with connection:
@@ -89,7 +90,7 @@ def update_user(user_id):
 
             set_clause = []
             if email is not None:
-                set_clause.append(f"email = '{email}'") 
+                set_clause.append(f"email = '{email}'")
             if given_name is not None:
                 set_clause.append(f"given_name = '{given_name}'")
             if surname is not None:
@@ -101,7 +102,9 @@ def update_user(user_id):
             if profile_description is not None:
                 set_clause.append(f"profile_description = '{profile_description}'")
             if password is not None:
-                set_clause.append(f"the_password = '{password}'") # Include email in the set_clause
+                set_clause.append(
+                    f"the_password = '{password}'"
+                )  # Include email in the set_clause
 
             if set_clause:
                 update_query = f"""
