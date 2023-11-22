@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.inspection import inspect
 
 load_dotenv()
 
@@ -71,11 +72,11 @@ def get_all_users():
 def get_user(user_id):
     user = User.query.get(user_id)
     if user:
-        user_data = {column.key: getattr(user, column.key) for column in class_mapper(User).mapped_table.c}
+        # Convert SQLAlchemy model to a dictionary using inspect
+        user_data = {column.key: getattr(user, column.key) for column in inspect(User).columns}
         return jsonify(user_data)
     else:
         return jsonify({"message": "User not found"}), 404
-
 
 @app.route("/api/user/<int:user_id>", methods=["PATCH"])
 def update_user(user_id):
