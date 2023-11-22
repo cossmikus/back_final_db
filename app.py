@@ -49,7 +49,19 @@ def create_user():
 def get_all_users():
     all_users_data = User.query.all()
     if all_users_data:
-        users_list = [user.__dict__ for user in all_users_data]
+        users_list = [
+            {
+                "user_id": user.user_id,
+                "email": user.email,
+                "given_name": user.given_name,
+                "surname": user.surname,
+                "city": user.city,
+                "phone_number": user.phone_number,
+                "profile_description": user.profile_description,
+                "the_password": user.the_password,
+            }
+            for user in all_users_data
+        ]
         return jsonify(users_list)
     else:
         return jsonify({"message": "No users found"}), 404
